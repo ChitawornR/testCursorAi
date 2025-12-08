@@ -1,0 +1,25 @@
+# Dev image for Next.js with live reload
+# Usage: docker compose -f compose.dev.yaml up --build
+
+ARG NODE_VERSION=20
+FROM node:${NODE_VERSION}-bookworm-slim
+
+ENV NODE_ENV=development \
+    NEXT_TELEMETRY_DISABLED=1
+
+WORKDIR /app
+
+# Install tools for native builds
+RUN apt-get update && apt-get install -y --no-install-recommends python3 build-essential ca-certificates git && \
+    rm -rf /var/lib/apt/lists/*
+
+# Install deps first (use package-lock for caching)
+COPY package.json package-lock.json* ./
+RUN npm install
+
+# App code will be mounted in dev; still copy to allow npm scripts when mount missing
+COPY . .
+
+EXPOSE 3000
+CMD ["npm", "run", "dev"]
+
