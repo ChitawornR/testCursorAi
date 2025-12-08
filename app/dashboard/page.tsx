@@ -14,6 +14,13 @@ export default async function DashboardPage() {
     ? await listActiveUsersExcluding(session.id)
     : [await findUserById(session.id)].filter(Boolean);
 
+  const formatDate = (value: string) =>
+    new Intl.DateTimeFormat('en-GB', {
+      dateStyle: 'medium',
+      timeStyle: 'short',
+      timeZone: 'UTC',
+    }).format(new Date(value));
+
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-50">
       <div className="mx-auto max-w-5xl px-6 py-12">
@@ -72,11 +79,11 @@ export default async function DashboardPage() {
                   <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-slate-300 sm:grid-cols-3">
                     <p>
                       <span className="text-slate-400">Created:</span>{' '}
-                      {new Date(user!.createdAt).toLocaleString()}
+                        {formatDate(user!.createdAt)}
                     </p>
                     <p>
                       <span className="text-slate-400">Updated:</span>{' '}
-                      {new Date(user!.updatedAt).toLocaleString()}
+                        {formatDate(user!.updatedAt)}
                     </p>
                     <p className="text-emerald-200">
                       Status:{' '}

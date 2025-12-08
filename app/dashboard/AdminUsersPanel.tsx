@@ -17,6 +17,12 @@ type Props = {
 };
 
 const emptyForm = { name: '', email: '', password: '', role: 'user' as string };
+const formatDate = (value: string) =>
+  new Intl.DateTimeFormat('en-GB', {
+    dateStyle: 'medium',
+    timeStyle: 'short',
+    timeZone: 'UTC',
+  }).format(new Date(value));
 
 export default function AdminUsersPanel({ initialUsers }: Props) {
   const [users, setUsers] = useState<User[]>(initialUsers);
@@ -230,7 +236,7 @@ export default function AdminUsersPanel({ initialUsers }: Props) {
                       </span>
                     </td>
                     <td className="py-3 text-slate-400">
-                      {new Date(u.createdAt).toLocaleString()}
+                      {formatDate(u.createdAt)}
                     </td>
                     <td className="py-3 text-right">
                       <div className="flex justify-end gap-2">
