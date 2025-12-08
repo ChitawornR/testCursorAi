@@ -8,7 +8,7 @@ export default function Home() {
         <h1 className="mt-3 text-4xl font-semibold">Welcome</h1>
         <p className="mt-2 text-slate-200">
           Login or create a new account to access the dashboard.
-        </p>
+          </p>
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           <a
             href="/login"

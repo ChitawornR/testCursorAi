@@ -1,16 +1,17 @@
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { findUserById, softDeleteUser, updateUser } from '@/lib/db';
 import { getSessionUser, hashPassword } from '@/lib/auth';
 
-type Params = { params: { id: string } };
+type Params = { params: Promise<{ id: string }> };
 
-export async function PUT(req: Request, { params }: Params) {
+export async function PUT(req: NextRequest, { params }: Params) {
+  const { id: idParam } = await params;
   const session = await getSessionUser();
   if (!session || session.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const id = Number(params.id);
+  const id = Number(idParam);
   if (!id || Number.isNaN(id)) {
     return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   }
@@ -34,13 +35,14 @@ export async function PUT(req: Request, { params }: Params) {
   return NextResponse.json(user);
 }
 
-export async function DELETE(_req: Request, { params }: Params) {
+export async function DELETE(_req: NextRequest, { params }: Params) {
+  const { id: idParam } = await params;
   const session = await getSessionUser();
   if (!session || session.role !== 'admin') {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
-  const id = Number(params.id);
+  const id = Number(idParam);
   if (!id || Number.isNaN(id)) {
     return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   }

@@ -5,6 +5,12 @@ services:
       dockerfile: Dockerfile.dev
       args:
         NODE_VERSION: 20
+        JWTSECRET: ${JWTSECRET}
+        DB_HOST: db
+        DB_PORT: 3306
+        DB_USER: root
+        DB_PASSWORD: root
+        DB_NAME: test_cursor
     command: ["npm", "run", "dev"]
     working_dir: /app
     ports:
