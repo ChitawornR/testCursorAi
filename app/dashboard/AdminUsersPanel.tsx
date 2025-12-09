@@ -21,7 +21,7 @@ const formatDate = (value: string) =>
   new Intl.DateTimeFormat('en-GB', {
     dateStyle: 'medium',
     timeStyle: 'short',
-    timeZone: 'UTC',
+    timeZone: 'Asia/Bangkok',
   }).format(new Date(value));
 
 export default function AdminUsersPanel({ initialUsers }: Props) {

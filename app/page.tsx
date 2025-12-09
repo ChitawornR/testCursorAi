@@ -23,6 +23,9 @@ export default async function Home() {
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           {isLoggedIn ? (
             <>
+            <Link href="/profile">
+            Go to my profile
+            </Link>
               <span className="text-sm text-emerald-200">
                 Signed in as {session!.email}
               </span>
