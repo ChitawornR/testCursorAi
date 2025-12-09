@@ -1,7 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
+import Link from 'next/link';
+import { getSessionUser } from '@/lib/auth';
+import { log } from 'console';
+
 
 export default function LoginForm() {
   const router = useRouter();
@@ -21,14 +25,20 @@ export default function LoginForm() {
         body: JSON.stringify({ email, password }),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         setError(data.error || 'Login failed');
         setLoading(false);
         return;
       }
 
-      router.replace('/dashboard');
+      if (data.role === "admin"){
+        console.log('this is admin')
+        router.replace('/dashboard');
+      }else{
+        router.replace('/')
+      }
+
     } catch (err) {
       console.error(err);
       setError('Unexpected error');
@@ -84,9 +94,9 @@ export default function LoginForm() {
 
         <p className="mt-6 text-center text-sm text-slate-300">
           No account?{' '}
-          <a className="font-semibold text-emerald-300" href="/register">
+          <Link className="font-semibold text-emerald-300" href="/register">
             Register
-          </a>
+          </Link>
         </p>
       </div>
     </div>

@@ -8,7 +8,7 @@ export default function RegisterPage() {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [role, setRole] = useState('user');
+  // const [role, setRole] = useState('user');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
 
@@ -20,17 +20,22 @@ export default function RegisterPage() {
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, email, password, role }),
+        body: JSON.stringify({ name, email, password}),
       });
 
+      const data = await res.json();
       if (!res.ok) {
-        const data = await res.json();
         setError(data.error || 'Register failed');
         setLoading(false);
         return;
       }
 
-      router.replace('/dashboard');
+      if (data.role === "admin") {
+        router.replace('/dashboard');
+      }else{
+        router.replace('/')
+      }
+
     } catch (err) {
       console.error(err);
       setError('Unexpected error');
@@ -79,17 +84,6 @@ export default function RegisterPage() {
               value={password}
               onChange={(e) => setPassword(e.target.value)}
             />
-          </div>
-          <div>
-            <label className="text-sm text-slate-200">Role</label>
-            <select
-              className="mt-1 w-full rounded-lg border border-white/10 bg-slate-900/60 px-3 py-2 text-slate-100 outline-none focus:border-emerald-400 focus:ring-2 focus:ring-emerald-400/40"
-              value={role}
-              onChange={(e) => setRole(e.target.value)}
-            >
-              <option value="user">User</option>
-              <option value="admin">Admin</option>
-            </select>
           </div>
           {error && (
             <div className="rounded-lg bg-red-500/10 px-3 py-2 text-sm text-red-200">

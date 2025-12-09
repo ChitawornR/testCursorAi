@@ -4,7 +4,10 @@ import LoginForm from './LoginForm';
 
 export default async function LoginPage() {
   const session = await getSessionUser();
-  if (session) {
+  if (session?.role === "user") {
+    redirect('/');
+  }
+  if (session?.role === "admin") {
     redirect('/dashboard');
   }
 

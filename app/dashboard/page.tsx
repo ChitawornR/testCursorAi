@@ -1,25 +1,19 @@
-import { redirect } from 'next/navigation';
-import { getSessionUser } from '@/lib/auth';
-import { findUserById, listActiveUsersExcluding } from '@/lib/db';
-import AdminUsersPanel from './AdminUsersPanel';
+import { redirect } from "next/navigation";
+import { getSessionUser } from "@/lib/auth";
+import { findUserById, listActiveUsersExcluding } from "@/lib/db";
+import AdminUsersPanel from "./AdminUsersPanel";
 
 export default async function DashboardPage() {
   const session = await getSessionUser();
   if (!session) {
-    redirect('/login');
+    redirect("/login");
+  }
+  if (session?.role === "user"){
+    redirect("/")
   }
 
-  const isAdmin = session.role === 'admin';
-  const data = isAdmin
-    ? await listActiveUsersExcluding(session.id)
-    : [await findUserById(session.id)].filter(Boolean);
-
-  const formatDate = (value: string) =>
-    new Intl.DateTimeFormat('en-GB', {
-      dateStyle: 'medium',
-      timeStyle: 'short',
-      timeZone: 'UTC',
-    }).format(new Date(value));
+  const data = await listActiveUsersExcluding(session.id)
+    
 
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-900 via-slate-800 to-slate-900 text-slate-50">
@@ -33,7 +27,10 @@ export default async function DashboardPage() {
               Welcome back, {session.name}
             </h1>
             <p className="text-sm text-slate-300/80">
-              Role: <span className="font-medium text-emerald-200">{session.role}</span>
+              Role:{" "}
+              <span className="font-medium text-emerald-200">
+                {session.role}
+              </span>
             </p>
           </div>
           <form action="/api/logout" method="post">
@@ -48,60 +45,18 @@ export default async function DashboardPage() {
 
         <section className="mt-8">
           <div className="flex items-center justify-between">
-            <h2 className="text-xl font-semibold">
-              {isAdmin ? 'Manage Users' : 'Your Profile'}
-            </h2>
-            {isAdmin && (
-              <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-wide text-emerald-200">
-                Admin View
-              </span>
-            )}
+            <h2 className="text-xl font-semibold">Manage Users</h2>
+
+            <span className="rounded-full bg-white/10 px-3 py-1 text-xs uppercase tracking-wide text-emerald-200">
+              Admin View
+            </span>
           </div>
 
-          {isAdmin ? (
-            <AdminUsersPanel initialUsers={data} />
-          ) : (
-            <div className="mt-6 grid gap-4">
-              {data?.map((user) => (
-                <div
-                  key={user!.id}
-                  className="rounded-xl border border-white/10 bg-white/5 p-4 shadow-lg backdrop-blur"
-                >
-                  <div className="flex items-center justify-between">
-                    <div>
-                      <p className="text-lg font-semibold text-white">{user!.name}</p>
-                      <p className="text-sm text-slate-300">{user!.email}</p>
-                    </div>
-                    <span className="rounded-full bg-emerald-400/20 px-3 py-1 text-xs font-semibold uppercase text-emerald-200">
-                      {user!.role}
-                    </span>
-                  </div>
-                  <div className="mt-3 grid grid-cols-1 gap-2 text-sm text-slate-300 sm:grid-cols-3">
-                    <p>
-                      <span className="text-slate-400">Created:</span>{' '}
-                        {formatDate(user!.createdAt)}
-                    </p>
-                    <p>
-                      <span className="text-slate-400">Updated:</span>{' '}
-                        {formatDate(user!.updatedAt)}
-                    </p>
-                    <p className="text-emerald-200">
-                      Status:{' '}
-                      {user!.deleteAt ? (
-                        <span className="text-red-300">Deleted</span>
-                      ) : (
-                        'Active'
-                      )}
-                    </p>
-                  </div>
-                </div>
-              ))}
+          <AdminUsersPanel initialUsers={data} />
 
-              {!data?.length && (
-                <div className="rounded-xl border border-white/10 bg-white/5 p-6 text-center text-slate-300">
-                  No users found.
-                </div>
-              )}
+          {!data?.length && (
+            <div className="rounded-xl border border-white/10 bg-white/5 p-6 text-center text-slate-300">
+              No users found.
             </div>
           )}
         </section>
@@ -109,4 +64,3 @@ export default async function DashboardPage() {
     </div>
   );
 }
-

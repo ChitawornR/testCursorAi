@@ -1,4 +1,5 @@
 import { getSessionUser } from '@/lib/auth';
+import Link from 'next/link';
 
 export default async function Home() {
   const session = await getSessionUser();
@@ -22,24 +23,21 @@ export default async function Home() {
         <div className="mt-8 flex flex-col items-center justify-center gap-4 sm:flex-row">
           {isLoggedIn ? (
             <>
-              <a
-                href="/dashboard"
-                className="w-full rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-emerald-400 sm:w-auto"
-              >
-                Go to Dashboard
-              </a>
               <span className="text-sm text-emerald-200">
                 Signed in as {session!.email}
               </span>
+              <form action="/api/logout" method='POST'>
+              <button type='submit' className='w-full rounded-full bg-red-600 px-6 py-3 text-sm font-semibold text-white transition hover:bg-red-500 sm:w-auto'>Logout</button>
+              </form>
             </>
           ) : (
             <>
-              <a
+              <Link
                 href="/login"
                 className="w-full rounded-full bg-emerald-500 px-6 py-3 text-sm font-semibold text-slate-900 transition hover:bg-emerald-400 sm:w-auto"
               >
                 Login
-              </a>
+              </Link>
               <a
                 href="/register"
                 className="w-full rounded-full border border-emerald-200/50 px-6 py-3 text-sm font-semibold text-emerald-100 transition hover:border-emerald-300 sm:w-auto"
