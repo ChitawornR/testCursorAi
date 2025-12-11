@@ -48,8 +48,7 @@ export async function setSessionCookie(token: string) {
     httpOnly: true,
     sameSite: 'lax',
     path: '/',
-    maxAge: TOKEN_EXP_SECONDS,
-    secure: process.env.NODE_ENV === 'production',
+secure: process.env.AUTH_SECURE_COOKIE === 'true',
   });
 }
 
@@ -60,7 +59,7 @@ export async function clearSessionCookie() {
     sameSite: 'lax',
     path: '/',
     maxAge: 0,
-    secure: process.env.NODE_ENV === 'production',
+    secure: process.env.AUTH_SECURE_COOKIE === 'true',
   });
 }
 
