@@ -6,6 +6,7 @@ import AdminUsersPanel from "./AdminUsersPanel";
 export default async function DashboardPage() {
   const session = await getSessionUser();
   if (!session) {
+    console.log('dashboard: no session')
     redirect("/login");
   }
   if (session?.role === "user"){
