@@ -7,12 +7,6 @@ export default function Sidebar() {
     { label: "Dashboard", href: "/dashboard" },
     { label: "Hello", href: "/dashboard/hello" },
     { label: "HelloFromMain", href: "/hello" },
-    { label: "Orders", href: "/orders" },
-    { label: "Deliveries", href: "/deliveries" },
-    { label: "Invoices", href: "/invoices" },
-    { label: "Payments", href: "/payments" },
-    { label: "Credit Notes", href: "/credit-notes" },
-    { label: "Statement", href: "/statement" },
   ];
 
   return (
